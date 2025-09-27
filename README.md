@@ -1,111 +1,107 @@
-📄 README.md (final)
 # Project 1: Simple Authentication
 
 ## Cách chạy
 Cài đặt dependencies:
 ```bash
 npm install
-
-
+```
 
 Chạy server Basic Auth:
-
+```bash
 node basic_auth.js
-
+```
 
 Chạy server Cookie Auth:
-
+```bash
 node cookie_auth.js
+```
 
-Part A: Basic Auth (basic_auth.js)
-Public Routes
+---
 
-GET / → không cần đăng nhập
+## Part A: Basic Auth (`basic_auth.js`)
 
-GET /public → không cần đăng nhập
+### Public Routes
+- `GET /` → không cần đăng nhập  
+- `GET /public` → không cần đăng nhập  
 
-Secure Route
+### Secure Route
+- `GET /secure` → yêu cầu Basic Auth  
+  - Username: `admin`  
+  - Password: `12345`  
 
-GET /secure → yêu cầu Basic Auth
+### Kết quả test
+- **Không gửi Authorization**  
+  ![No Auth](public/results/secure_no_auth.png)  
 
-Username: admin
+- **Sai username/password**  
+  ![Wrong Auth](public/results/secure_wrong_auth.png)  
 
-Password: 12345
+- **Đúng username/password**  
+  ![Success Auth](public/results/secure_success.png)  
 
-Kết quả test
+---
 
-Không gửi Authorization
+## Part B: Cookie Auth (`cookie_auth.js`)
 
-
-Sai username/password
-
-
-Đúng username/password
-
-
-Part B: Cookie Auth (cookie_auth.js)
-1. Login
-
+### 1. Login
 Request:
-
+```http
 POST /login
 Content-Type: application/json
 {
   "username": "admin",
   "password": "12345"
 }
-
+```
 
 Kết quả:
+- Response: `"Logged in!"`  
+- Tab Cookies trong Postman có `auth_cookie_token`  
+- MongoDB collection `cookies` có record mới  
 
-Response: "Logged in!"
+Ảnh test:  
+![Login Cookie](public/results/login_cookie.png)  
+![Mongo Cookie](public/results/mongo_cookie.png)  
 
-Tab Cookies trong Postman có auth_cookie_token
+---
 
-MongoDB collection cookies có record mới
-
-Ảnh test:
-
-
-
-
-2. Profile
-
+### 2. Profile
 Request:
-
+```http
 GET /profile
-
+```
 
 Kết quả test:
+- Chưa login → `401 No cookie found`  
+  ![Profile No Cookie](public/results/profile_no_cookie.png)  
 
-Chưa login → 401 No cookie found
+- Cookie sai/hết hạn → `401 Invalid or expired cookie`  
+  ![Profile Invalid Cookie](public/results/profile_invalid_cookie.png)  
 
+- Cookie hợp lệ → trả về thông tin user  
+  ![Profile With Cookie](public/results/profile_with_cookie.png)  
 
-Cookie sai/hết hạn → 401 Invalid or expired cookie
+---
 
-
-Cookie hợp lệ → trả về thông tin user
-
-
-3. Logout
-
+### 3. Logout
 Request:
-
+```http
 POST /logout
+```
 
+Kết quả: Cookie bị xóa ở client & trong MongoDB  
 
-Kết quả: Cookie bị xóa ở client & trong MongoDB
+Ảnh test:  
+![Logout Cookie](public/results/logout_cookie.png)  
+![Mongo Cookie After Logout](public/results/mongo_cookie_after_logout.png)  
 
-Ảnh test:
+---
 
-
-
-Hoàn thành
-
-basic_auth.js → xác thực bằng Basic Auth header
-
-cookie_auth.js → xác thực bằng Cookie + lưu session trong MongoDB
+## Hoàn thành
+- `basic_auth.js` → xác thực bằng Basic Auth header  
+- `cookie_auth.js` → xác thực bằng Cookie + lưu session trong MongoDB  
 
 Ảnh minh họa test đều nằm trong thư mục:
-
+```
 public/results/
+```
